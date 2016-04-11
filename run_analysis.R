@@ -37,6 +37,7 @@ trainDataFrame=cbind(trainDataFrame,trainActivities)
 library(stringr)
 cleanColumnNames=str_trim(columnsNames$V2)
 cleanColumnNames=gsub("-","",cleanColumnNames)
+cleanColumnNames=gsub("\\(\\)","",cleanColumnNames)
 cleanColumnNames=c("subject",cleanColumnNames, "activity")  
 stdAndMeanColumnNames=grep(pattern="^.*(std\\(\\)|mean\\(\\)).*$",ignore.case = T,cleanColumnNames,value=T)
 stdAndMeanColumnNames=c("subject",stdAndMeanColumnNames, "activity") 
@@ -52,7 +53,24 @@ names(unionDataFrame)=cleanColumnNames
 stdAndmeanDataframe=unionDataFrame[,stdAndMeanColumnNames]
 
 # 11- group by 
-groups1=group_by(stdAndmeanDataframe,subject,activity)
-result=lapply(groups1,mean)
-result2=result[][2:68]
-write.csv(result2,"./result.csv")
+library(tcltk)
+library(sqldf)
+result=sqldf("select avg(tBodyAccmeanX),         avg(tBodyAccmeanY),         avg(tBodyAccmeanZ),         
+avg(tBodyAccstdX),          avg(tBodyAccstdY),          avg(tBodyAccstdZ),          avg(tGravityAccmeanX),      
+      avg(tGravityAccmeanY),      avg(tGravityAccmeanZ),      avg(tGravityAccstdX),       avg(tGravityAccstdY),       
+      avg(tGravityAccstdZ),       avg(tBodyAccJerkmeanX),     avg(tBodyAccJerkmeanY),     avg(tBodyAccJerkmeanZ),     
+      avg(tBodyAccJerkstdX),      avg(tBodyAccJerkstdY),      avg(tBodyAccJerkstdZ),      avg(tBodyGyromeanX),        
+      avg(tBodyGyromeanY),        avg(tBodyGyromeanZ),        avg(tBodyGyrostdX),         avg(tBodyGyrostdY),         
+      avg(tBodyGyrostdZ),         avg(tBodyGyroJerkmeanX),    avg(tBodyGyroJerkmeanY),    avg(tBodyGyroJerkmeanZ),    
+      avg(tBodyGyroJerkstdX),     avg(tBodyGyroJerkstdY),     avg(tBodyGyroJerkstdZ),     avg(tBodyAccMagmean),        
+      avg(tBodyAccMagstd),         avg(tGravityAccMagmean),     avg(tGravityAccMagstd),      avg(tBodyAccJerkMagmean),    
+      avg(tBodyAccJerkMagstd),     avg(tBodyGyroMagmean),       avg(tBodyGyroMagstd),        avg(tBodyGyroJerkMagmean),   
+      avg(tBodyGyroJerkMagstd),    avg(fBodyAccmeanX),         avg(fBodyAccmeanY),         avg(fBodyAccmeanZ),         
+      avg(fBodyAccstdX),          avg(fBodyAccstdY),          avg(fBodyAccstdZ),          avg(fBodyAccJerkmeanX),     
+      avg(fBodyAccJerkmeanY),     avg(fBodyAccJerkmeanZ),     avg(fBodyAccJerkstdX),      avg(fBodyAccJerkstdY),      
+      avg(fBodyAccJerkstdZ),      avg(fBodyGyromeanX),        avg(fBodyGyromeanY),        avg(fBodyGyromeanZ),        
+      avg(fBodyGyrostdX),         avg(fBodyGyrostdY),         avg(fBodyGyrostdZ),         avg(fBodyAccMagmean),        
+      avg(fBodyAccMagstd),         avg(fBodyBodyAccJerkMagmean),avg(fBodyBodyAccJerkMagstd), avg(fBodyBodyGyroMagmean),   
+      avg(fBodyBodyGyroMagstd),    avg(fBodyBodyGyroJerkMagmean),avg(fBodyBodyGyroJerkMagstd),avg(activity)
+      from stdAndmeanDataframe group by subject,activity")
+write.table(result,file="./result.txt",row.names = FALSE)
