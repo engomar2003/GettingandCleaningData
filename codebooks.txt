@@ -1,0 +1,46 @@
+############################
+###     Code Book  #########
+############################
+
+after downloading zip file and expanding it, there will be 2 main folders {test , train} 
+in addition to reference files
+
+here is an explanation of variables used in the run_analysis.R
+
+columnsNames            :  is the column names existing in features.txt file , these column names will be used to assign names to data frames
+
+#######################Test set#################
+activityLabelDataFrame  :  is a data frame holding activities from activity_labels.txt
+
+subjecttestDataFrame    :  contains data (1 column) representing subject
+
+testActivities          :  contains data (1 column) representing activity id
+
+columnWidths            :  is a vector to enable reading fixed width format file
+
+testDataFrame           :  contains the core test data  from file { x_test.txt}
+
+
+#######################Train set#################
+activityLabelDataFrame  :  is a data frame holding activities from activity_labels.txt
+
+subjectTrainDataFrame    :  contains data (1 column) representing subject
+
+TrainActivities          :  contains data (1 column) representing activity id
+
+TrainDataFrame           :  contains the core Train data  from file { x_Train.txt}
+
+#######################  union
+cleanColumnNames         :  vector of column names after removing whitespaces and -   , appending to it "subject" and "activity"
+
+stdAndMeanColumnNames    :  vector of column names those include std or mean in it.
+
+
+unionDataFrame           :  is the union between 2 data frames test and train
+
+stdAndmeanDataframe      :  is part of union data frame with column names include std or mean.
+
+#######################  grouping
+groups1                  :  is the grouping of stdAndmeanDataframe based on subject and activity 
+result                   :  is the average of groups in groups1
+result2                  :  subset of result to exclude activity and subject
